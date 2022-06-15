@@ -1,0 +1,54 @@
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const connectDB = require('./db');
+const User = require('./models/User');
+const app = express();
+app.use(express.json());
+
+
+
+
+app.get('/', (_req, res) => {
+  const obj = {
+    name:'Tanbir',
+    email: 'tanbir@gmail.com'
+  };
+  
+  res.json(obj);
+});
+
+app.post('/register', async(req, res) => {
+  
+  const {name, email, password} = req.body;
+
+  if(!name || !email || !password){
+    return res.status(400).json({message: "Invalid Data"});
+
+  }
+
+   let user = await User.findOne({email})
+   if(user){
+       return res.status(400).json({message: "User already exist"})
+   }
+   user = new User({name, email, password})
+   
+   const salt = await bcrypt.genSalt(10);
+   const hash = await bcrypt.hash(password, salt);
+
+   user.password = hash
+   await user.save();
+
+   return res.status(201).json({message : "User created successfully", user})
+})
+
+connectDB('mongodb://localhost:27017/attendance-db')
+.then(() => {
+  console.log('Database is connected')
+  app.listen(5000, () => {
+    console.log('Server is listing on port 5000')
+  });
+})
+.catch((error) => {
+  console.log(error)
+})
+
