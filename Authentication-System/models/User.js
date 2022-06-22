@@ -18,9 +18,23 @@ const userSchema = new Schema({
       }
     }
   },
-  password: String,
-  roles: [String],
-  accountStatus: String
+  password: {
+    type: String,
+    minlength: [4, 'Password is too short'],
+   
+    required: true
+  },
+  roles: {
+    type: [String],
+    default: ['Student'],
+    required: true
+  },
+  accountStatus: {
+    type: String,
+    enum: ['Pending', 'Active', 'Rejected'],
+    default: 'Pending',
+    required: true
+  }
 })
 
 const User = model('User', userSchema);
