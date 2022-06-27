@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const connectDB = require('./db');
+const authenticate = require('./middleware/authentication')
 const User = require('./models/User');
 const app = express();
 app.use(express.json());
@@ -71,23 +72,8 @@ app.post('/login',async(req,res, next) => {
       }
 })
 
-app.get('/private', (req, res) => {
-     
-    let token = req.headers.authorization;
-    if(!token){
-      return res.status(401).json({message: 'Unauthorized'})
-    }
-
-    try{
-       
-      token = token.split('')[1];
-      const user = jwt.verify(token, 'secret-key');
-      console.log(user)
-    }catch (e){
-        return res.status(400).json({message: 'Invalid Token'})
-    }
-
-    return res.status(200).json({message: 'I am private Route'})
+app.get('/private', authenticate,  async(req, res) => {
+    return res.status(200).json({message: 'I am private Route'}) 
 })
 
 app.get('/public', (req, res) => {
