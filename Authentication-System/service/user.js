@@ -13,7 +13,14 @@ const createNewUser = ({name, email, password}) => {
   return user.save();
 }
 
+
+const findUsers = () => {
+  return User.find()
+};
+
+
 module.exports = {
   findUserByProperty,
-  createNewUser
+  createNewUser,
+  findUsers
 };
