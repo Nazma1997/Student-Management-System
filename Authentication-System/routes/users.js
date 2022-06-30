@@ -1,12 +1,10 @@
 const router = require('express').Router();
-
+const userController = require('../controller/users');
 /**
  * get user by id or email
  * @method GET
  */
- router.get('/:userId', () => {
-
-});
+ router.get('/:userId', userController.getUserById);
 
 /**
  * update user by id or email
@@ -40,9 +38,7 @@ const router = require('express').Router();
  * @method Get
  * @visibility private
  */
-router.get('/', () => {
-
-});
+router.get('/users', userController.getUsers);
 /**
  * create a new user
  * @method POST
