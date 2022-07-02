@@ -5,7 +5,8 @@ const User = require('./models/User');
 const app = express();
 app.use(express.json());
 
-app.post('/register', async(req, res) => {
+app.post('/register', async(req, res, next) => {
+   try{
     const {name, email, password} = req.body;
     if(!name || !email || !password){
       return res.status(400).json({message: 'Invalid Data'})
@@ -24,8 +25,18 @@ app.post('/register', async(req, res) => {
     await user.save();
 
     return res.status(201).json({message: 'User Created Successfully', user})
+   }catch(e){
+    next(e)
+   }
 })
 
+/**
+ * Global Error Handler
+ */
+   app.use((err, req, res, next) => {
+    console.log(err);
+    res.status(500).json({message: 'Server Error Occurred'})
+   })
 
 
 /**
