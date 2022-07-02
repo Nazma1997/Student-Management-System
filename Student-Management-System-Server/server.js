@@ -1,5 +1,6 @@
 const express = require('express');
 const  bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const connectDB = require('./db');
 const User = require('./models/User');
 const app = express();
@@ -59,12 +60,36 @@ app.post('/login', async(req, res) => {
       }
 
       delete user._doc.password;
-      return res.status(200).json({message: 'Login Successfully', user});
+
+        token = jwt.sign(user._doc, 'secret-key', {expiresIn: '2h'})
+      
+      return res.status(200).json({message: 'Login Successfully', token});
   }catch(e){
     next(e);
   }
-})
+});
 
+/**
+ * Private Route
+ */
+   app.get('/private', async(req, res) => {
+        
+     
+
+        return res.status(200).json({message: 'I am from Private Route'});
+   });
+
+
+
+   /**
+    * Public Route
+    */
+
+   app.get('/public', (req, res) => {
+
+
+    return res.status(200).json({message: 'I am from Public Route'})
+   })
 /**
  * Global Error Handler
  */
