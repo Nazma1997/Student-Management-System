@@ -5,6 +5,10 @@ const User = require('./models/User');
 const app = express();
 app.use(express.json());
 
+
+/**
+ * Register a User
+ */
 app.post('/register', async(req, res, next) => {
    try{
     const {name, email, password} = req.body;
@@ -25,9 +29,40 @@ app.post('/register', async(req, res, next) => {
     await user.save();
 
     return res.status(201).json({message: 'User Created Successfully', user})
+
+    
    }catch(e){
     next(e)
    }
+});
+
+/**
+ * Login a User
+ */
+
+app.post('/login', async(req, res) => {
+
+
+  const {email, password} = req.body;
+    
+  try{
+    
+      const user= await User.findOne({email});
+
+      if(!user){
+        return res.status(400).json({message: 'Invalid Credential'});
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if(!isMatch){
+        return res.status(400).json({message: 'Invalid Credential'});
+      }
+
+      delete user._doc.password;
+      return res.status(200).json({message: 'Login Successfully', user});
+  }catch(e){
+    next(e);
+  }
 })
 
 /**
