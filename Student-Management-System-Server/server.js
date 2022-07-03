@@ -37,7 +37,9 @@ app.use(express.json());
  */
    app.use((err, req, res, next) => {
     console.log(err);
-    res.status(500).json({message: 'Server Error Occurred'})
+    const message = err.message ? err.message : 'Server Error Occurred';
+    const status = err.status ? err.status : 500;
+    res.status(status).json({message})
    })
 
 
