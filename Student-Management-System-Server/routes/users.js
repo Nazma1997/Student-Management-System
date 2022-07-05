@@ -22,18 +22,18 @@ const userController = require('../controller/user');
  * @method GET
  */
 
-router.get('/:userId', () => {});
+router.get('/:userId', userController.getUserById);
 /**
  * Delete a user by id
  * @method DELETE
  */
-router.delete('/:userId', () => {});
+router.delete('/:userId', userController.deleteUserById);
 /**
  * Create a new user
  * @method POST
  */
  
-router.post('/', () => {});
+router.post('/', userController.postUser);
 /**
  * Get All users
  * @method GET

@@ -19,11 +19,11 @@ const loginController =  async(req, res, next) => {
 const registerController =  async(req, res, next) => {
 
   try{
-       const {name, email, password} = req.body;
+       const {name, email, password, roles, accountStatus} = req.body;
   if(!name || !email || !password){
     return res.status(400).json({message: 'Invalid Data'})
   }
-    const user = await registerService({name, email, password})
+    const user = await registerService({name, email, password, roles, accountStatus})
     return res.status(201).json({message: 'User Created Successfully', user})
 
    
