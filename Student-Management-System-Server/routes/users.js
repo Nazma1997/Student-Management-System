@@ -7,13 +7,13 @@ const userController = require('../controller/user');
  * Update a user by id
  * @method PUT
  */
- router.put('/:userId', () => {});
+ router.put('/:userId', userController.postUserById);
 
 /**
  * Update a user by id (some fields)
  * @method PATCH
  */
- router.patch('/:userId', () => {});
+ router.patch('/:userId', userController.patchUserById);
 
 
 

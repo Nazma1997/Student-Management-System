@@ -76,8 +76,9 @@ const deleteUserById = async(req, res, next) => {
        }
 
        await user.remove();
-
-       return res.status(203).json({message: 'User Deleted Successfully ', user})
+        
+       // return res.status(203).send()
+       return res.status(203).json({message: 'User Deleted Successfully ', user}).send()
   }
   catch(e) {
     next(e)
@@ -86,9 +87,54 @@ const deleteUserById = async(req, res, next) => {
 
 };
 
-const postUserById = (req, res, next) => {};
+/**
+ * Update user (some field)
+ */
 
-const patchUserById = (req, res, next) => {};
+const patchUserById = async(req, res, next) => {
+      const userId = req.params.userId;
+      const {name, roles, accountStatus} = req.body;
+
+      try{
+        const user = await userService.findUserByProperty('_id', userId);
+
+
+        if(!user){
+          throw error('User not found', 404);
+        }
+
+        user.name = name ?? user.name;
+        user.roles = roles ?? user.roles;
+        user.accountStatus = accountStatus ?? user.accountStatus;
+
+        await user.save();
+
+        return res.status(200).json(user);
+      }
+      catch(e){
+        next(e)
+      }
+
+};
+
+const postUserById = async(req, res, next) => {
+
+     const userId = req.params.userId;
+     const {name, email, roles, accountStatus} = req.body;
+
+     try{
+            const user = await userService.updateUser(userId, {name, email, roles, accountStatus});
+
+            if(!user){
+              throw error('User not found', 404);
+            }
+
+            return res.status(200).json(user);
+     } catch(e){
+      next(e)
+     }
+
+};
 
 
 
